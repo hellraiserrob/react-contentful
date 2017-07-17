@@ -1,38 +1,21 @@
 var express = require('express')
-
 var logger = require('morgan')
 var helmet = require('helmet')
-
-
-
-
-
 var brands = require('./routes/brands')
-
 var app = express()
-
-
+var port = process.env.PORT || 5000;
 
 
 app.use(helmet()) // protect from well known vulnerabilities
-
-
 app.use('/api/brands', brands)
-
-
-
 
 app.get('/', function (req, res) {
     res.send('Hello World!')
 })
 
-app.listen(3000, function () {
-    console.log('Example app listening on port 3000!')
+app.listen(port, function () {
+    console.log(`Example app listening on port ${port}!`)
 })
-
-
-
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -40,11 +23,6 @@ app.use(function (req, res, next) {
     err.status = 404
     next(err)
 })
-
-
-
-
-
 
 // error handlers
 
