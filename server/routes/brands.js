@@ -7,15 +7,17 @@ var brands = require('../services/brands')
 /* router params */
 router.use(function (req, res, next) {
 
-    brands.getBrands().then(function (brandsCollection) {
+    let params = req.query
 
+    brands.getBrands(params).then(function (brandsCollection) {
         req.brands = brandsCollection.items
         next()
     })
 
 })
 
-router.get('/', function (req, res, next) {
+
+router.get('/:sort?', function (req, res, next) {
 
     res.send({
         'title': 'Brands',

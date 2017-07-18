@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import Brand from './components/brand'
+
 class App extends Component {
 
   constructor(props) {
@@ -8,40 +10,59 @@ class App extends Component {
 
     this.state = {
       brands: [],
-      isLoading: false
+      isLoading: false,
+      order: ''
     }
+
+    this.updateBrands = this.updateBrands.bind(this)
+    this.setorder = this.setorder.bind(this)
 
   }
 
 
   componentDidMount() {
 
-    console.log('componentDidMount')
+    this.updateBrands()
+  }
 
+
+  setorder(e, order){
+
+    e.preventDefault()
+
+    this.setState({
+      order: order
+    }, () => {
+      this.updateBrands()
+    })
+
+
+  }
+  
+  updateBrands() {
+    
     this.setState({
       isLoading: true
     })
 
+    let url = `/api/brands/?order=${this.state.order}`
 
-    let url = '/api/brands/'
 
     fetch(url)
       .then((response) => {
         if (response.status >= 400) {
-          throw new Error("Bad response from server");
+          throw new Error("Bad response from server")
         }
-        return response.json();
+        return response.json()
       })
       .then((data) => {
 
-        console.log(data)
-
-        this.setState({ 
+        this.setState({
           brands: data.brands,
           isLoading: false
-        });
-      });
+        })
 
+      });
 
   }
 
@@ -52,14 +73,24 @@ class App extends Component {
 
         <h1>Brands</h1>
 
+        <nav>
+          <ul>
+            <li>
+              <a href="jsx-a11y/href-no-hash" onClick={(e) => this.setorder(e, 'fields.name')}>Name</a>
+            </li>
+            <li>
+              <a href="jsx-a11y/href-no-hash" onClick={(e) => this.setorder(e, 'sys.createdAt')}>Created</a>
+            </li>
+          </ul>
+        </nav>
+
+
         {this.state.isLoading &&
-          <div>loading...</div>
+          <div className="loading">Loading</div>
         }
 
         {this.state.brands.map((brand, index) => {
-          return <div className="brand" key={brand.sys.id}>
-            {brand.fields.name}
-          </div>
+          return <Brand key={brand.sys.id} brand={brand} />
         })}
 
       </div>
