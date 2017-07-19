@@ -7,7 +7,6 @@ function getBrands(query) {
     query.content_type = 'brands'
     // query.order = 'fields.name'
 
-    console.log(query)
 
     return client.getEntries(query)
 }
